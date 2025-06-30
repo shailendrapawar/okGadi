@@ -57,8 +57,8 @@ class AuthController {
 
             return this.standardResponse(res, 200, "An OTP has been sent to your registered contact.", isInserted.rows[0]);
         } catch (err) {
-            console.log(err.message)
-            return this.standardResponse(res, 500, "some error while sending  otp s", null);
+            console.log("Error in sending OTP ",err.message)
+            return this.standardResponse(res, 500, "Internal server error", null);
         }
     }
 
@@ -121,8 +121,8 @@ class AuthController {
             this.standardResponse(res, 200, "Otp successfully verified", null)
 
         } catch (err) {
-            console.log(err.message)
-            return this.standardResponse(res, 500, "some error while otp verification", null);
+            console.log("Error in veriying OTP",err.message)
+            return this.standardResponse(res, 500, "Internal server error", null);
 
         }
     }

@@ -1,5 +1,6 @@
 import Joi from "joi"
 
+const passwordRegex=new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:"\'<>,.?/]).{8,}$')
 
 const adminInitSchema = Joi.object({
     first_name: Joi.string().required(),
@@ -9,7 +10,7 @@ const adminInitSchema = Joi.object({
 
     email: Joi.string().email().required(),
 
-    password: Joi.string().min(6).required(),
+    password: Joi.string().pattern(passwordRegex).min(6).required(),
     secret:Joi.string().required()
 })
 
@@ -22,7 +23,7 @@ const registrationSchema = Joi.object({
 
     email: Joi.string().email().required(),
 
-    password: Joi.string().min(6).required()
+    password: Joi.string().pattern(passwordRegex).min(6).required()
 })
 
 
@@ -42,7 +43,7 @@ const resetPasswordSchema=Joi.object({
   }),
     // purpose:Joi.string().valid("login","signup","password_reset").required(),
     user_role:Joi.string().valid("user","admin").required(),
-    newPassword:Joi.string().required(),
+    newPassword:Joi.string().pattern(passwordRegex).required(),
 })
 
 export { registrationSchema,loginSchema,adminInitSchema,resetPasswordSchema }

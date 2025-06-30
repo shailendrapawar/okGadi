@@ -81,7 +81,6 @@ class AdminController {
             return this.standardResponse(res, 201, "registration successfull ", isRegistered)
 
         } catch (err) {
-
             console.log("error in admin registration",err.message)
             return this.standardResponse.apply(res, 500, "internal server error", null)
         }
@@ -279,8 +278,8 @@ class AdminController {
             return this.standardResponse(res, 200, "Your password has been successfully reset.", null);
 
         } catch (err) {
-            console.log("error in admin reset password",err.message)
-            return this.standardResponse(res, 400, "Your password has been successfully reset.", null);
+            console.log("Error in admin reset password",err.message)
+            return this.standardResponse(res, 500, "Internal server error", null);
         }
     }
 
