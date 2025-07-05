@@ -48,7 +48,7 @@ class AdminController {
 
         } catch (err) {
             console.log("Error in intializing admin",err.message)
-            return this.standardResponse.apply(res, 500, "internal server error", null)
+            return this.standardResponse.apply(res, 500, "Internal server error", null)
         }
     }
 
@@ -81,8 +81,9 @@ class AdminController {
             return this.standardResponse(res, 201, "registration successfull ", isRegistered)
 
         } catch (err) {
-            console.log("error in admin registration",err.message)
-            return this.standardResponse.apply(res, 500, "internal server error", null)
+
+            console.log("Error in admin registration",err.message)
+            return this.standardResponse.apply(res, 500, "Internal server error", null)
         }
     }
 
@@ -279,7 +280,7 @@ class AdminController {
 
         } catch (err) {
             console.log("Error in admin reset password",err.message)
-            return this.standardResponse(res, 500, "Internal server error", null);
+            return this.standardResponse(res, 500, "Internal server error.", null);
         }
     }
 
