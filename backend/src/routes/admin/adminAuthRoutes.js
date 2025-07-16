@@ -1,26 +1,26 @@
 import express from "express"
-import AdminController from "../controllers/adminController.js";
+import AdminAuthController from "../../controllers/admin/adminAuthController.js";
 
-import authMiddleware from "../middlewares/authMiddleware.js";
-import checkRoleMiddleware from "../middlewares/checkRoleMIddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import checkRoleMiddleware from "../../middlewares/checkRoleMIddleware.js";
 import passport from "passport";
-import AuthController from "../controllers/authController.js";
+import AuthController from "../../controllers/authController.js";
 
-const adminRouter = express.Router();
+const adminAuthRouter = express.Router();
 
 
 
-adminRouter.post("/init-admin", AdminController.initializeAdmin);
-adminRouter.post("/login", AdminController.adminLogin);
+adminAuthRouter.post("/init-admin", AdminAuthController.initializeAdmin);
+adminAuthRouter.post("/login", AdminAuthController.adminLogin);
 
 
 //protected routes======== 
-adminRouter.post("/register", authMiddleware, checkRoleMiddleware(['admin']), AdminController.adminRegister);
+adminAuthRouter.post("/register", authMiddleware, checkRoleMiddleware(['admin']), AdminAuthController.adminRegister);
 
 
 
 // link google account ========
-adminRouter.get("/google-link",
+adminAuthRouter.get("/google-link",
     authMiddleware,
     checkRoleMiddleware(['admin']),
     passport.authenticate("google", {
@@ -28,7 +28,7 @@ adminRouter.get("/google-link",
         prompt: "select_account"
     }))
 
-adminRouter.get("/google-link/callback",
+adminAuthRouter.get("/google-link/callback",
     authMiddleware,
     checkRoleMiddleware(['admin']),
     (req, res, next) => {
@@ -43,18 +43,18 @@ adminRouter.get("/google-link/callback",
             next();
         })(req, res, next)
     }
-    , AdminController.linkGoogleAccount);
+    , AdminAuthController.linkGoogleAccount);
 
 
     //========= SSO login route=========
-adminRouter.get("/google-login",
+adminAuthRouter.get("/google-login",
     passport.authenticate("google-login",{
         scope:["profile","email"],
         prompt:"select_account"
     }))
 
 
-adminRouter.get("/google-login/callback",
+adminAuthRouter.get("/google-login/callback",
     (req, res, next) => {
         passport.authenticate("google-login", {
             failureRedirect: "/",
@@ -68,15 +68,15 @@ adminRouter.get("/google-login/callback",
 
         })(req, res, next)
     },
-    AdminController.googleLogin
+    AdminAuthController.googleLogin
 )
 
 
-adminRouter.post("/reset-password",AdminController.resetPassword);
+adminAuthRouter.post("/reset-password",AdminAuthController.resetPassword);
 
-adminRouter.post("/change-password",authMiddleware,checkRoleMiddleware(['admin']),AdminController.changePassword);
-
-
+adminAuthRouter.post("/change-password",authMiddleware,checkRoleMiddleware(['admin']),AdminAuthController.changePassword);
 
 
-export default adminRouter;
+
+
+export default adminAuthRouter;

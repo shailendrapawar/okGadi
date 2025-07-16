@@ -67,6 +67,35 @@ const createCoreTables = async (pool) => {
     );
     `)
 
+    // 4: vehicle master table =====
+
+  await pool.query(`
+      CREATE TABLE IF NOT EXISTS vehicle_master (
+           id   SERIAL PRIMARY KEY,
+
+           icon_url  TEXT NOT NULL,
+
+           vehicle_category     TEXT NOT NULL
+                 CHECK (vehicle_category IN ('transport', 'machinery')),
+
+           vehicle_type TEXT NOT NULL ,
+
+           body_type    TEXT NOT NULL
+                 CHECK (body_type IN ('full', 'half')),
+
+           range_km     NUMERIC(6,1) NOT NULL
+                 CHECK (range_km > 0),
+
+           payload_min  NUMERIC(6,2) CHECK (payload_min IS NULL OR payload_min > 0),
+           payload_max  NUMERIC(6,2) CHECK (payload_min IS NULL OR payload_max > 0)  ,
+
+           payload_unit TEXT CHECK (payload_unit = 'ton') DEFAULT 'ton',
+
+           created_at   TIMESTAMPTZ DEFAULT NOW(),
+           updated_at   TIMESTAMPTZ DEFAULT NOW()
+      );
+  `)
+
   console.log("core tables created")
 }
 

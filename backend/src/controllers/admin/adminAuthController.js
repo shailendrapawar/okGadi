@@ -1,15 +1,15 @@
-import { loginSchema, registrationSchema, adminInitSchema, resetPasswordSchema } from "../../validations/userValidation.js";
+import { loginSchema, registrationSchema, adminInitSchema, resetPasswordSchema } from "../../../validations/userValidation.js";
 import bcrypt from "bcrypt"
-import { registerAdminService, checkUserExistsByEmailOrMobile, findUserByEmailOrMobile, checkIfAdminExists, updateLoginMethodService, updateLoginAttemptCountService } from "../models/adminModel.js";
+import { registerAdminService, checkUserExistsByEmailOrMobile, findUserByEmailOrMobile, checkIfAdminExists, updateLoginMethodService, updateLoginAttemptCountService } from "../../models/admin/adminAuthModel.js";
 import jwt from "jsonwebtoken"
 
 import { configDotenv } from "dotenv"
-import { changePasswordService, isOtpVerifiedService } from "../models/authModel.js";
-import lockUserAccount from "../helpers/lockUserAccount.js";
+import { changePasswordService, isOtpVerifiedService } from "../../models/authModel.js";
+import lockUserAccount from "../../helpers/lockUserAccount.js";
 configDotenv();
 
 
-class AdminController {
+class AdminAuthController {
 
     // #======standard response ========#
     static standardResponse = (res, status, message, data) => {
@@ -291,4 +291,4 @@ class AdminController {
 
 }
 
-export default AdminController
+export default AdminAuthController

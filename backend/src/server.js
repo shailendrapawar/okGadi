@@ -13,13 +13,16 @@ import "../configs/strategies/googleLoginStrategy.js"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
-import userRouter from "./routes/userRoutes.js";
-import adminRouter from "./routes/adminRoutes.js";
+
+// importing routes
 import authRouter from "./routes/authRoutes.js";
+import adminAuthRouter from "./routes/admin/adminAuthRoutes.js";
+import vehicleMasterRouter from "./routes/admin/vehicleMasterRoutes.js";
+
+import userRouter from "./routes/user/userRoutes.js";
 
 import createAllTables from "../configs/db/init/index.js";
-import sendMail from "./services/mailService.js";
-
+import path from "path";
 
 
 
@@ -28,7 +31,6 @@ app.use(cors({
     origin: "*",
     credentials: true
 }))
-
 app.use(expressSession({
     secret: "wkjncwkjecnw",
     resave: false,
@@ -38,19 +40,25 @@ app.use(expressSession({
         secure: false
     }
 }))
-
 app.use(express.json())
 app.use(cookieParser());
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 
 
 // routes middlewares ==========
-app.use("/user", userRouter);
-app.use("/admin", adminRouter)
-app.use("/auth", authRouter)
 
+app.use("/auth", authRouter);
+
+//admin routes
+app.use("/admin", adminAuthRouter);
+app.use("/admin/vehicle-master",vehicleMasterRouter)
+
+
+app.use("/user", userRouter);
 
 
 

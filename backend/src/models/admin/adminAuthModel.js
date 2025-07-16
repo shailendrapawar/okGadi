@@ -1,4 +1,4 @@
-import { pool } from "../../configs/db/dbConnect.js";
+import { pool } from "../../../configs/db/dbConnect.js";
 
 
 export const  checkIfAdminExists=async()=>{

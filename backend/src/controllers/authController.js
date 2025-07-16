@@ -2,7 +2,7 @@ import generateOTPWithExpiry from "../../utils/otpGenerator.js";
 import { sendOtpSchema, verifyOtpSchema } from "../../validations/otpValidation.js";
 import lockUserAccount from "../helpers/lockUserAccount.js";
 import { checkMatchingOtpService, checkUnexpiredOtp, increaseOtpAttemptCount, insertOtpService, markOtpAsVerifiedService } from "../models/authModel.js";
-import sendMail from "../services/mailService.js";
+import sendMail from "../services/email/mailService.js";
 class AuthController {
 
 
@@ -48,7 +48,7 @@ class AuthController {
 
             // 5: send otp via sms /mail
             if(value.identifier_type==="email"){
-                await sendMail({to:`${value.identifier_value}`,subject:` OTP account ${value.purpose}`, html:`<h3>your OTP is: ${otpData.otp_code}</h3>`});
+                await sendMail({to:`${value.identifier_value}`,purpose:value.purpose, otp_code:otpData.otp_code});
             }else if(value.identifier_type==="mobile"){
                 //send sms
             }else{
