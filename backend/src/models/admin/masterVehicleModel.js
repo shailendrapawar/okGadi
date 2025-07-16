@@ -61,13 +61,23 @@ export const updateVehicleService=async(data)=>{
 
 
 //5: get all vehicles service
-export const getAllVehiclesService=async()=>{
-    const query=` SELECT * from vehicle_master`
-    const res=await pool.query(query);
+export const getAllVehiclesService=async({limit,offset})=>{
+    const query=` SELECT * from vehicle_master 
+                        ORDER BY  id 
+                        LIMIT $1 OFFSET $2`
+    const res=await pool.query(query,[limit,offset]);
     return res;
 }
 
-//6 get single vehicle
+//6 get length of all vehicles in db
+
+export const getTotalVehiclesNumber=async()=>{
+    const query= ` SELECT COUNT(*) from vehicle_master ;`
+    const res=await pool.query(query)
+    return res;
+}
+
+//7 get single vehicle
 export const getSingleVehicleService=async(id)=>{
 
     const query=`SELECT * from vehicle_master

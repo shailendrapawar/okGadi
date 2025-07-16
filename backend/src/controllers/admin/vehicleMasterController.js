@@ -1,9 +1,9 @@
 
 import { addVehicleSchema, updateVehicleSchema } from "../../../validations/vehicleMasterValidation.js";
 import deleteIconfromServer from "../../helpers/deleteIcon.js";
-import { checkVehicleExistsService, createVehicleService, getAllVehiclesService, getIconService, getSingleVehicleService, updateVehicleService } from "../../models/admin/masterVehicleModel.js";
+import { checkVehicleExistsService, createVehicleService, getAllVehiclesService, getIconService, getSingleVehicleService, getTotalVehiclesNumber, updateVehicleService } from "../../models/admin/masterVehicleModel.js";
 import { configDotenv } from "dotenv";
-import path from "path"
+import path, { parse } from "path"
 configDotenv();
 
 class VehicleMasterController {
@@ -100,7 +100,7 @@ class VehicleMasterController {
             }
 
             //4 : send response
-            if (!isCreated.rowCount>0) {
+            if (!isCreated.rowCount > 0) {
                 return this.standardResponse(res, 400, "Some error in updating vehicle", null);
             }
             return this.standardResponse(res, 200, "Vehicle updated successfully", null);
@@ -113,14 +113,29 @@ class VehicleMasterController {
 
     // C get all vehicles
     static getAllVehicles = async (req, res) => {
+
+
+        const limit = parseInt(req.query.limit) || 1;
+        const page = parseInt(req.query.page) || 10;
+        const offset=(page-1)*limit;
+
+
         try {
-            const allVehicles = await getAllVehiclesService();
+            //1: get all vehicles according to page and limit
+            const allVehicles = await getAllVehiclesService({limit,offset});
+
+            //2: get total length of vehicles as well
+            const countResult=await getTotalVehiclesNumber();
+            const total=parseInt(countResult.rows[0].count);
+
+            //3: calculate has more
+             const hasMore = offset + limit < total;
 
             if (!allVehicles.rowCount > 0) {
                 return this.standardResponse(res, 400, "Some erorr while retriving vehicles", null)
             }
 
-            return this.standardResponse(res, 400, "Vehicles found", allVehicles.rows);
+            return this.standardResponse(res, 200, "Vehicles found", {vehicles:allVehicles.rows,total,hasMore});
         } catch (err) {
             console.log("Error in get all vehicles", err);
             return this.standardResponse(res, 500, "Internal server error", null);
@@ -136,8 +151,8 @@ class VehicleMasterController {
             if (!vehicle.rowCount > 0) {
                 return this.standardResponse(res, 400, "Vehicle not found", null);
             }
-            const imgLink = path.join(`${process.cwd()}`, "uploads", "icons-uploads")
-            return this.standardResponse(res, 500, "Vehicle found", vehicle.rows[0]);
+            // const imgLink = path.join(`${process.cwd()}`, "uploads", "icons-uploads")
+            return this.standardResponse(res, 200, "Vehicle found", vehicle.rows[0]);
 
         } catch (error) {
             console.log("Error in get single vehicles", err);
